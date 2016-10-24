@@ -1,0 +1,234 @@
+<!-- TEMPLATES -->
+
+<!-- * * * * * * * * * * * * *
+        ApplicationLayout - TEMPLATE
+     * * * * * * * * * * * * * -->
+<template name="ApplicationLayout">
+    <div class="container">
+        <div class="jumbotron">
+            {{> yield "navbar"}}
+            {{> yield "main"}}
+        </div> <!-- / .jumbotron -->
+    </div> <!-- / .container -->    
+</template>
+
+
+
+<!-- * * * * * * * * * * * * *
+        navbar - TEMPLATE 
+     * * * * * * * * * * * * * -->
+<template name="navbar">
+    <div class="navbar navbar-default" role='navigation'>
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/login"> <img src="escudoCaballeriaTrpXSm.png" alt="Corporate Image/Logo"/></a>
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div> <!-- / .navbar-header -->
+
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li class="active">
+                    <a href="#">Link</a>
+                </li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                {{> loginButtons align="right"}}
+            </ul>
+        </div> <!-- / .navbar-collapse -->
+    </div> <!-- / .navbar -->
+</template>
+
+
+
+<!-- * * * * * * * * * * * * *
+        filesList - TEMPLATE 
+     * * * * * * * * * * * * * -->
+<template name="filesList">
+    <div class="ui segment fileDrop">
+        <p class="titleBtn text-right"><strong>Filter by Document Type</strong></p>
+        <div class="btn-group selectBtn">
+            <button type="button" id="publicBtn" class="btn btn-default">Public</button>
+            <button type="button" id="privateBtn" class="btn btn-default">Private</button>
+            <button type="button" id="allBtn" class="btn btn-default">All</button>            
+        </div> <!-- / .radio -->
+
+        <table class="ui celled striped table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <!--<th>ID</th>-->
+                    <th>Owner</th>
+                    <th>Size</th>
+                    <th>MIME Type</th>
+                    <!--<th>MD5</th>-->
+                    <th>Preview</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {{#each dataEntries}}
+                    <tr class="Public" id="row{{timeFlag}}">
+                        <!-- Name -->
+                        <td> 
+                            {{#if length}}
+                                <a href="{{link}}?download=true">
+                                    {{shortFilename 56}}
+                                </a>
+                            {{else}}
+                                {{shortFilename 56}}                            
+                            {{/if}} <!-- / if length -->
+
+                            {{#if owner}}
+                                <button type="button" class="btn btn-danger btn-xs close del-file">
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                </button><br/>
+                            
+                                {{#if private}}
+                                    <button type="button" id="{{timeFlag}}" class="btn toggle-private btn-success btn-contrast btn-xs">
+                                        Private       
+                                    </button>
+                                {{else}}
+                                    <button type="button" id="{{timeFlag}}"  class="btn toggle-private btn-warning btn-contrast btn-xs">
+                                        Public       
+                                    </button>
+                                {{/if}} <!-- / if private -->
+                            {{/if}} <!-- / if owner -->
+                        </td>
+
+                        <!-- Owner -->
+                        <td> 
+                            <!--{{#if owner}}
+                                {{ownerName}}                            
+                            {{else}}-->
+                            <span class="text-muted">{{ownerName}}</span>
+                            <!--{{/if}}--> <!-- / if owner -->
+                        </td>
+
+                        <!-- Size -->
+                        <td> 
+                            {{#if length}}
+                                {{formattedLength}}
+                            {{else}}
+                                {{uploadStatus}}
+                                <br/>
+                                {{uploadProgress}}% complete
+                                <br/>
+                                <div data-percent="{{uploadProgress}}" class="ui bottom attached indicating progress">
+                                    <div class="bar" style="transition-duration: 100ms; width: {{uploadProgress}}%;"></div>
+                                </div> <!-- / .ui -->
+                            {{/if}} <!-- / if length -->
+
+                        </td>
+
+
+                        <!-- MIME Type -->
+                        <td>
+                            {{contentType}}
+                        </td>
+
+                        <td>
+                            {{#if isImage}}
+                                <a href="{{link}}">
+                                    <img class="img-thumbnail" id="{{timeFlag}}" alt="preview of {{shortFilename 16}} will display here" src="{{link}}" width="150"/>
+                                </a>
+                            {{/if}} <!-- / isImage -->
+
+                            {{#if cssFile}}
+                                <a href="{{link}}">
+                                    <img class="img-thumbnail" id="{{timeFlag}}" alt="preview of {{shortFilename 16}} will display here" src="css.png" width="150"/>
+                                </a>
+                            {{/if}} <!-- / cssFile -->
+
+                            {{#if csvFile}}
+                                <a href="{{link}}">
+                                    <img class="img-thumbnail" id="{{timeFlag}}" alt="preview of {{shortFilename 16}} will display here" src="csv.png" width="150"/>
+                                </a>
+                            {{/if}} <!-- / csvFile -->
+
+                            {{#if excelFile}}
+                                <a href="{{link}}">
+                                    <img class="img-thumbnail" id="{{timeFlag}}" alt="preview of {{shortFilename 16}} will display here" src="excel.png" width="150"/>
+                                </a>
+                            {{/if}} <!-- / excelFile -->
+
+                            {{#if jsonFile}}
+                                <a href="{{link}}">
+                                    <img class="img-thumbnail" id="{{timeFlag}}" alt="preview of {{shortFilename 16}} will display here" src="json.png" width="150"/>
+                                </a>
+                            {{/if}} <!-- / jsonFile -->
+
+                            {{#if pdfFile}}
+                                <a href="{{link}}">
+                                    <img class="img-thumbnail" id="{{timeFlag}}" alt="preview of {{shortFilename 16}} will display here" src="pdf.png" width="150"/>
+                                </a>    
+                            {{/if}} <!-- / pdfFile -->
+
+                            {{#if ppointFile}}
+                                <a href="{{link}}">
+                                    <img class="img-thumbnail" id="{{timeFlag}}" alt="preview of {{shortFilename 16}} will display here" src="ppoint.png" width="150"/>
+                                </a>
+                            {{/if}} <!-- / ppointFile -->
+
+                            {{#if txtFile}}
+                                <a href="{{link}}">
+                                    <img class="img-thumbnail" id="{{timeFlag}}" alt="preview of {{shortFilename 16}} will display here" src="txt.png" width="150"/>
+                                </a>
+                            {{/if}} <!-- / txtFile -->
+
+                            {{#if wordFile}}
+                                <a href="{{link}}">
+                                    <img class="img-thumbnail" id="{{timeFlag}}" alt="preview of {{shortFilename 16}} will display here" src="word.png" width="150"/>
+                                </a>
+                            {{/if}} <!-- / wordFile -->
+
+                            {{#if noneFile}}
+                                <span class="text-muted" id="{{timeFlag}}">No Preview</span>
+                            {{/if}} <!-- / noneFile -->
+                            
+                        </td>
+                        <td>
+
+                        </td>
+                    </tr>
+                {{else}}
+                    <tr>
+                        <td class="center aligned" colspan="20">
+                            <span class="text-info">
+                                No files in collection, drag some here to upload
+                            </span>
+                        </td>
+                    </tr>
+                {{/each}} <!-- / each -->
+            </tbody>
+        </table>
+    </div> <!-- / .ui -->
+</template>
+
+
+
+<!-- * * * * * * * * * * * * *
+            WELCOME
+     * * * * * * * * * * * * * -->
+<template name="welcome">
+    <div class="row">
+        <img class="img-responsive" src="escudoCaballeriaTrp.png" alt="Escudo Caballería Ejército" />
+    </div> <!-- / .row -->
+
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="text-center">Welcome to</h1> 
+            <h1 class="text-center"><strong>Docs & Files Application</strong></h1>            
+        </div> <!-- / .col -->
+    </div> <!-- / .row -->
+    <div class="row">
+        <div class="col-sm-12 col-md-4 col-md-offset-4">
+            <a href="/login" class="btn btn-primary btn-lg center-block">ENTER</a>
+        </div> <!-- / .col -->
+    </div> <!-- / .row -->
+    <a href="/validation"></a>
+</template>
